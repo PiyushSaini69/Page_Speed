@@ -7,7 +7,9 @@ export default function Home() {
   const [url, setUrl] = useState("");
   const [allData, setAllData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [Desktop, setDesktop] = useState(True);
+  const [desktop, setDesktop] = useState(true);
+  const [desktopData, setDesktopData] = useState(true);
+  const [mobile, set] = useState(true);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
