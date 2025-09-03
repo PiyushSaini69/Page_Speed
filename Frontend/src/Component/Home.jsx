@@ -261,6 +261,11 @@ ttfbScore={scoreTTFB(displayData.ttfb)}
 }
         </div>
       </div>
+<<<<<<< HEAD
+=======
+      <Dashboard/>
+      {/* <Performance/> */}
+>>>>>>> a31609d120c39824ac6d11781f3bca2b5f5bb68f
     </>
   );
 }
