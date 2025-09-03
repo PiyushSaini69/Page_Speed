@@ -9,6 +9,46 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [desktop, setDesktop] = useState(true);
 
+  function scoreLCP(lcp) {
+  if (lcp <= 2.5) return 1;
+  if (lcp > 4) return 0;
+  return (4 - lcp) / (4 - 2.5); // linear between 2.5–4s
+  }
+  
+  function scoreCLS(cls) {
+  if (cls <= 0.1) return 1;
+  if (cls > 0.25) return 0;
+  return (0.25 - cls) / (0.25 - 0.1);
+  }
+
+  function scoreINP(inp) {
+  if (inp <= 200) return 1;
+  if (inp > 500) return 0;
+  return (500 - inp) / (500 - 200);
+  }
+
+  function scoreFCP(fcp) {
+  if (fcp <= 1.8) return 1;
+  if (fcp > 3) return 0;
+  return (3 - fcp) / (3 - 1.8);
+  }
+
+  function scoreTTFB(ttfb) {
+  if (ttfb <= 200) return 1;
+  if (ttfb > 600) return 0;
+  return (600 - ttfb) / (600 - 200); // linear between 200–600ms
+  }
+
+
+  const extractINP = (audits) => {
+  // Try experimental first, fallback to stable, otherwise "N/A"
+  return (
+    audits?.["experimental-interaction-to-next-paint"]?.displayValue ||
+    audits?.["interaction-to-next-paint"]?.displayValue ||
+    "N/A"
+  );
+};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -47,14 +87,7 @@ export default function Home() {
         tbt:
           result.desktop?.lighthouseResult?.audits?.["total-blocking-time"]
             ?.displayValue || "N/A",
-        inp:
-          result.desktop?.lighthouseResult?.audits?.[
-            "experimental-interaction-to-next-paint"
-          ]?.displayValue ||
-          result.desktop?.lighthouseResult?.audits?.[
-            "interaction-to-next-paint"
-          ]?.displayValue ||
-          "N/A",
+        inp: extractINP(result.desktop?.lighthouseResult?.audits),
         ttfb:
           result.desktop?.lighthouseResult?.audits?.["server-response-time"]
             ?.displayValue || "N/A",
@@ -81,14 +114,7 @@ export default function Home() {
         tbt:
           result.mobile?.lighthouseResult?.audits?.["total-blocking-time"]
             ?.displayValue || "N/A",
-        inp:
-          result.mobile?.lighthouseResult?.audits?.[
-            "experimental-interaction-to-next-paint"
-          ]?.displayValue ||
-          result.mobile?.lighthouseResult?.audits?.[
-            "interaction-to-next-paint"
-          ]?.displayValue ||
-          "N/A",
+        inp: extractINP(result.mobile?.lighthouseResult?.audits),
         ttfb:
           result.mobile?.lighthouseResult?.audits?.["server-response-time"]
             ?.displayValue || "N/A",
@@ -110,14 +136,14 @@ export default function Home() {
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 flex flex-col items-center p-6">
+      <div className="min-h bg-gradient-to-br from-gray-100 to-gray-300 flex flex-col items-center p-6">
         <h1 className="text-3xl font-bold mb-6 text-gray-800">
           🚀 Website Performance Checker
         </h1>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg flex flex-col items-center"
+          className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg flex  items-center"
         >
           <input
             type="url"
@@ -130,30 +156,33 @@ export default function Home() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-amber-500 text-white font-semibold px-6 py-2 rounded-xl shadow-md hover:bg-amber-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className=" bg-amber-500 mb-4 ml-4 p-2 text-white font-semibold px-2 py-2 rounded-xl shadow-md hover:bg-amber-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-            Check Performance
+            Analyse
           </button>
         </form>
-            {loading && (
+            {loading ? 
+            <div>
               <div className="mt-6 text-lg font-semibold text-gray-700 animate-pulse">
                 ⏳ Analyzing website... Please wait
               </div>
-            )}
+            </div>
+          :
+<div>
 
         {desktopData && mobileData && (
           <div className="flex justify-center items-center mt-10 space-x-4">
             <Button onClick={() => setDesktop(true)}>🖥️ Desktop</Button>
             <Button onClick={() => setDesktop(false)}>📱 Mobile</Button>
-          </div>
-        )}
+            </div>
+          )}
 
         {/* Results Section */}
         {displayData && (
           <div className="mt-10 w-full max-w-3xl">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800">✅ Results</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">✅ Results</h2>
 
-            <div className="grid gap-4">
+          <div className="grid gap-4">
               <h2>For {desktop ? "Desktop" : "Mobile"}:</h2>
               <div className="bg-white shadow-md rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-xl transition">
                 <div>
@@ -171,13 +200,13 @@ export default function Home() {
                       : displayData.performance >= 50
                       ? "bg-yellow-500"
                       : "bg-red-500"
-                  }`}
+                    }`}
                 >
                   {displayData.performance}%
                 </span>
               </div>
 
-              <div className="bg-white shadow-md rounded-xl p-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+<div className="bg-white shadow-md rounded-xl p-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <div>
                   <p className="font-semibold text-gray-700">FCP</p>
                   <p className="text-gray-600">{displayData.fcp}</p>
@@ -204,9 +233,11 @@ export default function Home() {
                 </div>
               </div>
 
-            </div>
-          </div>
+</div>
+</div>
         )}
+        </div>
+}
       </div>
     </>
   );
