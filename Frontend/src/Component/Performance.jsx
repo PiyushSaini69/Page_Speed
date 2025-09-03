@@ -42,7 +42,7 @@ function MetricRow({ label, value, unit, status }) {
 
 export default function Performance() {
   return (
-    <div className="w-full max-w-5xl mx-auto p-6 bg-white rounded-lg shadow">
+    <div className="w-full max-w-5xl mb-8 mx-auto p-6 bg-gray-200  rounded-3xl shadow-2xl">
       {/* Header */}
       <h2 className="text-gray-700 font-semibold text-sm mb-4">
         Diagnose performance issues
@@ -50,10 +50,23 @@ export default function Performance() {
 
       {/* Category Scores */}
       <div className="flex justify-center gap-10 mb-6">
-         <CirculerProgress value={32} size={90} stroke={7} />
-         <CirculerProgress value={76} size={90} stroke={7} />
-         <CirculerProgress value={90} size={90} stroke={7} />
-         <CirculerProgress value={45} size={90} stroke={7} />
+         <div className=" flex flex-col justify-center items-center">
+            <CirculerProgress value={32} size={90} stroke={7} />
+         <p className="mt-1"> Performance</p>
+         </div>
+        <div className=" flex flex-col justify-center items-center">
+             <CirculerProgress value={76} size={90} stroke={7} />
+             <p className="mt-1">Assessability</p>
+        </div>
+         <div className=" flex flex-col justify-center items-center">
+            <CirculerProgress value={90} size={90} stroke={7} />
+            <p className="mt-1">Best Practices</p>
+         </div>
+         <div className=" flex flex-col justify-center items-center">
+        <CirculerProgress value={45} size={90} stroke={7} />
+        <p className="mt-1">SEO</p>
+         </div>
+         
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -74,7 +87,7 @@ export default function Performance() {
         </div>
 
         {/* Right: Website Preview */}
-        <div className="flex justify-center items-start mt-10">
+        <div className="flex justify-center items-start mt-10 border-2 border-black p-2 rounded-3xl">
            <div className="w-full">
             <h3 className="text-xs font-semibold text-gray-600 mb-2">Metrics</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

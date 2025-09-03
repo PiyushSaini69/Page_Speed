@@ -8,7 +8,9 @@ import MetricCard from "./MetricCard";
 
 export default function Dashboard() {
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-gray-50">
+   <>
+   <div className="w-full  mx-auto p-6  bg-gray-20">
+     <div className="w-full max-w-5xl mx-auto p-6  bg-gray-200 shadow-2xl rounded-3xl">
       {/* Header */}
       <div className="mb-6 items-center justify-center flex flex-col">
         <h2 className="text-lg font-semibold text-gray-800">
@@ -34,5 +36,7 @@ export default function Dashboard() {
         <MetricCard label="Time to First Byte (TTFB)" value={1.2} unit="s" max={6} />
       </div>
     </div>
+   </div>
+   </>
   );
 }
