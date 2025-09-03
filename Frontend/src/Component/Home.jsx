@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Button from "./Button";
+import Dashboard from "./DashBoard";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -73,7 +74,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 flex flex-col items-center p-6">
+      <div className=" bg-gradient-to-br from-gray-100 to-gray-300 flex flex-col items-center p-6">
         <h1 className="text-3xl font-bold mb-6 text-gray-800">
           🚀 Website Performance Checker
         </h1>
@@ -171,6 +172,7 @@ export default function Home() {
           </div>
         )}
       </div>
+      <Dashboard/>
     </>
   );
 }

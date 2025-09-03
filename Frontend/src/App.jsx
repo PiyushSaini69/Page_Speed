@@ -6,6 +6,8 @@ import Home from './Component/Home'
 
 // import {BrowserRoutes as Router, Routes ,Route} from 'react-router-dom'
 import {Routes, Route } from "react-router-dom";
+import Test from './Component/Test'
+import Dashboard from './Component/DashBoard'
 
 
 
@@ -19,7 +21,9 @@ function App() {
     <Routes>
       
       
+      <Route path='/test' element={<Test/>} />
       <Route path='/' element={<Home/>} />
+      <Route path='/des' element={<Dashboard/>} />
       
     </Routes>
 
