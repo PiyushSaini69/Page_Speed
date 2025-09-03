@@ -1,53 +1,52 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Button from "./Button";
+import Dashboard from "./DashBoard";
 
 export default function Home() {
   const [url, setUrl] = useState("");
   const [desktopData, setDesktopData] = useState(null);
   const [mobileData, setMobileData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [desktop, setDesktop] = useState(true);
+  const [isDesktopSelected, setIsDesktopSelected] = useState(true);
 
   function scoreLCP(lcp) {
-  if (lcp <= 2.5) return 1;
-  if (lcp > 4) return 0;
-  return (4 - lcp) / (4 - 2.5); // linear between 2.5–4s
+  const lcps=lcp.split(" ")[0]
+  if (lcps <= 2.5) return 1;
+  if (lcps > 4) return 0;
+  return ((4 - lcps) / (4 - 2.5)).toFixed(2); 
+  console.log(lcps);
+  
   }
   
   function scoreCLS(cls) {
-  if (cls <= 0.1) return 1;
-  if (cls > 0.25) return 0;
-  return (0.25 - cls) / (0.25 - 0.1);
+  const clss=cls.split(" ")[0]  
+  if (clss <= 0.1) return 1;
+  if (clss > 0.25) return 0;
+  return ((0.25 - clss) / (0.25 - 0.1)).toFixed(2);
   }
 
   function scoreINP(inp) {
-  if (inp <= 200) return 1;
-  if (inp > 500) return 0;
-  return (500 - inp) / (500 - 200);
+  const inps=inp.split(" ")[0]
+  if (inps <= 200) return 1;
+  if (inps > 500) return 0;
+  return ((500 - inps) / (500 - 200)).toFixed(2);
   }
 
   function scoreFCP(fcp) {
-  if (fcp <= 1.8) return 1;
-  if (fcp > 3) return 0;
-  return (3 - fcp) / (3 - 1.8);
+  const fcps=fcp.split(" ")[0]
+  if (fcps <= 1.8) return 1;
+  if (fcps > 3) return 0;
+  return ((3 - fcps) / (3 - 1.8)).toFixed(2);
   }
 
   function scoreTTFB(ttfb) {
-  if (ttfb <= 200) return 1;
-  if (ttfb > 600) return 0;
-  return (600 - ttfb) / (600 - 200); // linear between 200–600ms
+  const ttfbs=ttfb.split(" ")[0]  
+  if (ttfbs <= 200) return 1;
+  if (ttfbs > 600) return 0;
+  return ((600 - ttfbs) / (600 - 200)).toFixed(2); 
   }
 
-
-  const extractINP = (audits) => {
-  // Try experimental first, fallback to stable, otherwise "N/A"
-  return (
-    audits?.["experimental-interaction-to-next-paint"]?.displayValue ||
-    audits?.["interaction-to-next-paint"]?.displayValue ||
-    "N/A"
-  );
-};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,9 +65,9 @@ export default function Home() {
 
       const result = await response.json();
 
+      // Desktop Data
       const desktopdata = {
         url: result.desktop?.lighthouseResult?.finalUrl || url,
-        totalTiming: result.desktop?.lighthouseResult?.timing?.total || "N/A",
         performance:
           (result.desktop?.lighthouseResult?.categories?.performance?.score ?? 0) *
             100 || "N/A",
@@ -87,15 +86,19 @@ export default function Home() {
         tbt:
           result.desktop?.lighthouseResult?.audits?.["total-blocking-time"]
             ?.displayValue || "N/A",
-        inp: extractINP(result.desktop?.lighthouseResult?.audits),
+        inp: 
+          result.mobile?.lighthouseResult?.audits?.["experimental-interaction-to-next-paint"]?.displayValue ||
+             result.mobile?.lighthouseResult?.audits?.["interaction-to-next-paint"]?.displayValue || "N/A",
         ttfb:
           result.desktop?.lighthouseResult?.audits?.["server-response-time"]
             ?.displayValue || "N/A",
+         speedindex:
+          result.desktop?.lighthouseResult?.audits?.["speed-index"]?.displayValue || "N/A",
       };
 
+      // Mobile Data
       const mobiledata = {
         url: result.mobile?.lighthouseResult?.finalUrl || url,
-        totalTiming: result.mobile?.lighthouseResult?.timing?.total || "N/A",
         performance:
           (result.mobile?.lighthouseResult?.categories?.performance?.score ??
             0) * 100 || "N/A",
@@ -114,15 +117,20 @@ export default function Home() {
         tbt:
           result.mobile?.lighthouseResult?.audits?.["total-blocking-time"]
             ?.displayValue || "N/A",
-        inp: extractINP(result.mobile?.lighthouseResult?.audits),
+        inp:
+          result.mobile?.lighthouseResult?.audits?.["experimental-interaction-to-next-paint"]?.displayValue ||
+             result.mobile?.lighthouseResult?.audits?.["interaction-to-next-paint"]?.displayValue || "N/A",
         ttfb:
           result.mobile?.lighthouseResult?.audits?.["server-response-time"]
             ?.displayValue || "N/A",
+        speedindex:
+          result.mobile?.lighthouseResult?.audits?.["speed-index"]?.displayValue || "N/A",
+
       };
 
       setDesktopData(desktopdata);
       setMobileData(mobiledata);
-      setUrl(""); // clear input
+      setUrl("");
     } catch (error) {
       alert("Error: " + error.message);
     } finally {
@@ -130,13 +138,16 @@ export default function Home() {
     }
   };
 
-  const displayData = desktop ? desktopData : mobileData;
+  // Pick data based on selected tab
+  const displayData = isDesktopSelected ? desktopData : mobileData;
 
   return (
     <>
       <Navbar />
 
       <div className="min-h bg-gradient-to-br from-gray-100 to-gray-300 flex flex-col items-center p-6">
+      <div className=" bg-gradient-to-br from-gray-100 to-gray-300 flex flex-col items-center p-6">
+
         <h1 className="text-3xl font-bold mb-6 text-gray-800">
           🚀 Website Performance Checker
         </h1>
@@ -152,7 +163,7 @@ export default function Home() {
             className="border-2 border-gray-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-300 rounded-xl px-4 py-2 w-full mb-4 outline-none"
             onChange={(e) => setUrl(e.target.value)}
             required
-            />
+          />
           <button
             type="submit"
             disabled={loading}
@@ -170,27 +181,26 @@ export default function Home() {
           :
 <div>
 
+
         {desktopData && mobileData && (
           <div className="flex justify-center items-center mt-10 space-x-4">
-            <Button onClick={() => setDesktop(true)}>🖥️ Desktop</Button>
-            <Button onClick={() => setDesktop(false)}>📱 Mobile</Button>
-            </div>
-          )}
+            <Button onClick={() => setIsDesktopSelected(true)}>🖥️ Desktop</Button>
+            <Button onClick={() => setIsDesktopSelected(false)}>📱 Mobile</Button>
+          </div>
+        )}
 
         {/* Results Section */}
         {displayData && (
           <div className="mt-10 w-full max-w-3xl">
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">✅ Results</h2>
 
-          <div className="grid gap-4">
-              <h2>For {desktop ? "Desktop" : "Mobile"}:</h2>
+         
+            <div className="grid gap-4">
+              <h2>For {isDesktopSelected ? "Desktop" : "Mobile"}:</h2>
               <div className="bg-white shadow-md rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-xl transition">
                 <div>
                   <p className="font-medium text-lg text-gray-800">
                     🌍 {displayData.url}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Timing: {displayData.totalTiming} ms
                   </p>
                 </div>
                 <span
@@ -234,10 +244,22 @@ export default function Home() {
               </div>
 
 </div>
-</div>
+
+
+<Dashboard 
+lcpScore={scoreLCP(displayData.lcp)}
+inpScore={scoreINP(displayData.inp)}
+clsScore={scoreCLS(displayData.cls)}
+fcpScore={scoreFCP(displayData.fcp)}
+ttfbScore={scoreTTFB(displayData.ttfb)}
+/>
+
+
+            </div>
         )}
-        </div>
+          </div>
 }
+        </div>
       </div>
     </>
   );
