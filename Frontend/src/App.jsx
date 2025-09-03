@@ -6,7 +6,7 @@ import Home from './Component/Home'
 
 // import {BrowserRoutes as Router, Routes ,Route} from 'react-router-dom'
 import {Routes, Route } from "react-router-dom";
-import Test from './Component/Test'
+
 
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
     <Routes>
       
       
-      <Route path='/' element={<Test/>} />
+      <Route path='/' element={<Home/>} />
       
     </Routes>
 
