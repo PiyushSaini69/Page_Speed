@@ -2,16 +2,16 @@ import React, { useState } from "react";
 
 export default function Home() {
   const [url, setUrl] = useState("");
-  const [allData, setAllData] = useState(null);
+  const [desktopData, setDesktopData] = useState(null);
+  const [mobileData, setMobileData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setAllData(null);
 
     try {
-      const response = await fetch("https://apipagespeed.sltechsoft.com/data", {
+      const response = await fetch("http://localhost:2000/data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: url }),
@@ -19,56 +19,47 @@ export default function Home() {
 
       const result = await response.json();
 
-      const newData = {
+      const desktopdata = {
         url: result.desktop?.lighthouseResult?.finalUrl || url,
+    totalTiming: result.desktop?.lighthouseResult?.timing?.total || "N/A",
+    performance:
+      (result.desktop?.lighthouseResult?.categories?.performance?.score ?? 0) * 100 || "N/A",
+    fcp:
+      result.desktop?.lighthouseResult?.audits?.["first-contentful-paint"]?.displayValue || "N/A",
+    lcp:
+      result.desktop?.lighthouseResult?.audits?.["largest-contentful-paint"]?.displayValue || "N/A",
+    cls:
+      result.desktop?.lighthouseResult?.audits?.["cumulative-layout-shift"]?.displayValue || "N/A",
+    tbt:
+      result.desktop?.lighthouseResult?.audits?.["total-blocking-time"]?.displayValue || "N/A",
+    inp:
+      result.desktop?.lighthouseResult?.audits?.["experimental-interaction-to-next-paint"]
+    ?.displayValue || "N/A",
+    ttfb:
+      result.desktop?.lighthouseResult?.audits?.["server-response-time"]?.displayValue || "N/A",
+      }
 
-        // Desktop
-        totalTiming: result.desktop?.lighthouseResult?.timing?.total || "N/A",
-        performance:
-          (result.desktop?.lighthouseResult?.categories?.performance?.score ??
-            0) * 100 || "N/A",
-        fcp:
-          result.desktop?.lighthouseResult?.audits?.[
-            "first-contentful-paint"
-          ]?.displayValue || "N/A",
-        lcp:
-          result.desktop?.lighthouseResult?.audits?.[
-            "largest-contentful-paint"
-          ]?.displayValue || "N/A",
-        cls:
-          result.desktop?.lighthouseResult?.audits?.[
-            "cumulative-layout-shift"
-          ]?.displayValue || "N/A",
-        tbt:
-          result.desktop?.lighthouseResult?.audits?.[
-            "total-blocking-time"
-          ]?.displayValue || "N/A",
-
-        // Mobile
-        totalTimingMobile:
-          result.mobile?.lighthouseResult?.timing?.total || "N/A",
-        performanceMobile:
-          (result.mobile?.lighthouseResult?.categories?.performance?.score ??
-            0) * 100 || "N/A",
-        fcpMobile:
-          result.mobile?.lighthouseResult?.audits?.[
-            "first-contentful-paint"
-          ]?.displayValue || "N/A",
-        lcpMobile:
-          result.mobile?.lighthouseResult?.audits?.[
-            "largest-contentful-paint"
-          ]?.displayValue || "N/A",
-        clsMobile:
-          result.mobile?.lighthouseResult?.audits?.[
-            "cumulative-layout-shift"
-          ]?.displayValue || "N/A",
-        tbtMobile:
-          result.mobile?.lighthouseResult?.audits?.[
-            "total-blocking-time"
-          ]?.displayValue || "N/A",
-      };
-
-      setAllData(newData);
+    //   const mobiledata = {
+    //     url: result.desktop?.lighthouseResult?.finalUrl || url,
+    // totalTiming: result.mobile?.lighthouseResult?.timing?.total || "N/A",
+    // performance:
+    //   (result.mobile?.lighthouseResult?.categories?.performance?.score ?? 0) * 100 || "N/A",
+    // fcp:
+    //   result.mobile?.lighthouseResult?.audits?.["first-contentful-paint"]?.displayValue || "N/A",
+    // lcp:
+    //   result.mobile?.lighthouseResult?.audits?.["largest-contentful-paint"]?.displayValue || "N/A",
+    // cls:
+    //   result.mobile?.lighthouseResult?.audits?.["cumulative-layout-shift"]?.displayValue || "N/A",
+    // tbt:
+    //   result.mobile?.lighthouseResult?.audits?.["total-blocking-time"]?.displayValue || "N/A",
+    // inp:
+    //   result.mobile?.lighthouseResult?.audits?.["experimental-interaction-to-next-paint"]
+    //     ?.displayValue || "N/A",
+    // ttfb:
+    //   result.mobile?.lighthouseResult?.audits?.["server-response-time"]?.displayValue || "N/A",
+    //   };
+      setDesktopData(desktopdata);
+      // setMobileData(mobiledata);
       setUrl(""); // clear input
     } catch (error) {
       alert("Data is not posted: " + error);
@@ -113,7 +104,7 @@ export default function Home() {
       )}
 
       {/* Results Section */}
-      {allData && (
+      {desktopData && (
         <div className="mt-10 w-full max-w-3xl">
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">✅ Results</h2>
 
@@ -123,41 +114,49 @@ export default function Home() {
             <div className="bg-white shadow-md rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-xl transition">
               <div>
                 <p className="font-medium text-lg text-gray-800">
-                  🌍 {allData.url}
+                  🌍 {desktopData.url}
                 </p>
                 <p className="text-sm text-gray-500">
-                  Timing: {allData.totalTiming} ms
+                  Timing: {desktopData.totalTiming} ms
                 </p>
               </div>
               <span
                 className={`mt-3 md:mt-0 px-4 py-2 rounded-lg text-white font-bold ${
-                  allData.performance >= 80
+                  desktopData.performance >= 80
                     ? "bg-green-500"
-                    : allData.performance >= 50
+                    : desktopData.performance >= 50
                     ? "bg-yellow-500"
                     : "bg-red-500"
                 }`}
               >
-                {allData.performance}%
+                {desktopData.performance}%
               </span>
             </div>
 
             <div className="bg-white shadow-md rounded-xl p-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               <div>
                 <p className="font-semibold text-gray-700">FCP</p>
-                <p className="text-gray-600">{allData.fcp}</p>
+                <p className="text-gray-600">{desktopData.fcp}</p>
               </div>
               <div>
                 <p className="font-semibold text-gray-700">LCP</p>
-                <p className="text-gray-600">{allData.lcp}</p>
+                <p className="text-gray-600">{desktopData.lcp}</p>
               </div>
               <div>
                 <p className="font-semibold text-gray-700">CLS</p>
-                <p className="text-gray-600">{allData.cls}</p>
+                <p className="text-gray-600">{desktopData.cls}</p>
               </div>
               <div>
                 <p className="font-semibold text-gray-700">TBT</p>
-                <p className="text-gray-600">{allData.tbt}</p>
+                <p className="text-gray-600">{desktopData.tbt}</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-700">INP</p>
+                <p className="text-gray-600">{desktopData.inp}</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-700">TTFB</p>
+                <p className="text-gray-600">{desktopData.ttfb}</p>
               </div>
             </div>
           </div>
@@ -167,7 +166,7 @@ export default function Home() {
           <br />
 
           {/* Mobile */}
-          <div className="grid gap-4">
+          {/* <div className="grid gap-4">
             <h2>For Mobile:</h2>
             <div className="bg-white shadow-md rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-xl transition">
               <div>
@@ -209,7 +208,7 @@ export default function Home() {
                 <p className="text-gray-600">{allData.tbtMobile}</p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       )}
     </div>
