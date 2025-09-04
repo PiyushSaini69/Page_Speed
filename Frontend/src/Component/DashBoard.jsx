@@ -6,7 +6,9 @@ import MetricCard from "./MetricCard";
 // Reusable Metric Card
 
 
-export default function Dashboard() {
+export default function Dashboard({lcpScore,inpScore,clsScore,fcpScore,ttfbScore}) {
+
+  
   return (
    <>
    <div className="w-full  mx-auto p-6  bg-gray-20">
@@ -24,16 +26,16 @@ export default function Dashboard() {
       {/* Main Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         
-        <MetricCard label="Largest Contentful Paint (LCP)" value={2.7} unit="s" max={6} />
-        <MetricCard label="Interaction to Next Paint (INP)" value={307} unit="ms" max={800} />
-        <MetricCard label="Cumulative Layout Shift (CLS)" value={0.06} unit="" max={1} />
+        <MetricCard label="Largest Contentful Paint (LCP)" value={lcpScore}  max={6} />
+        <MetricCard label="Interaction to Next Paint (INP)" value={inpScore}  max={800} />
+        <MetricCard label="Cumulative Layout Shift (CLS)" value={clsScore} unit="" max={1} />
       </div>
 
       {/* Other Notable Metrics */}
       <h3 className="text-sm font-semibold text-gray-600 mb-2">Other Notable Metrics</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <MetricCard label="First Contentful Paint (FCP)" value={1.9} unit="s" max={6} />
-        <MetricCard label="Time to First Byte (TTFB)" value={1.2} unit="s" max={6} />
+        <MetricCard label="First Contentful Paint (FCP)" value={fcpScore}  max={6} />
+        <MetricCard label="Time to First Byte (TTFB)" value={ttfbScore}  max={6} />
       </div>
     </div>
    </div>
