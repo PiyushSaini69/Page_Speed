@@ -10,7 +10,9 @@ export default function Dashboard({lcpScore,inpScore,clsScore,fcpScore,ttfbScore
 
   
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-gray-50">
+   <>
+   <div className="w-full  mx-auto p-6  bg-gray-20">
+     <div className="w-full max-w-5xl mx-auto p-6  bg-gray-200 shadow-2xl rounded-3xl">
       {/* Header */}
       <div className="mb-6 items-center justify-center flex flex-col">
         <h2 className="text-lg font-semibold text-gray-800">
@@ -24,17 +26,19 @@ export default function Dashboard({lcpScore,inpScore,clsScore,fcpScore,ttfbScore
       {/* Main Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         
-        <MetricCard label="Largest Contentful Paint (LCP)" value={lcpScore} unit="s" max={6} />
-        <MetricCard label="Interaction to Next Paint (INP)" value={inpScore} unit="ms" max={800} />
+        <MetricCard label="Largest Contentful Paint (LCP)" value={lcpScore}  max={6} />
+        <MetricCard label="Interaction to Next Paint (INP)" value={inpScore}  max={800} />
         <MetricCard label="Cumulative Layout Shift (CLS)" value={clsScore} unit="" max={1} />
       </div>
 
       {/* Other Notable Metrics */}
       <h3 className="text-sm font-semibold text-gray-600 mb-2">Other Notable Metrics</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <MetricCard label="First Contentful Paint (FCP)" value={fcpScore} unit="s" max={6} />
-        <MetricCard label="Time to First Byte (TTFB)" value={ttfbScore} unit="s" max={6} />
+        <MetricCard label="First Contentful Paint (FCP)" value={fcpScore}  max={6} />
+        <MetricCard label="Time to First Byte (TTFB)" value={parseFloat(ttfbScore.split(" ")[3])} unit="ms"  max={6} />
       </div>
     </div>
+   </div>
+   </>
   );
 }

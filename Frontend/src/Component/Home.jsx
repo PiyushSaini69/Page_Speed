@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import Button from "./Button";
 import Dashboard from "./DashBoard";
 import Performance from "./Performance";
+import getTechnicalPerformanceScore from "../Extract_Value/TechnicalPerformance"
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -11,6 +12,7 @@ export default function Home() {
   const [mobileData, setMobileData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isDesktopSelected, setIsDesktopSelected] = useState(true);
+  const [metric,setMetric] = useState('')
 
   // ✅ Scoring Functions (fixed with parseFloat + unit handling)
   function scoreLCP(lcp) {
@@ -42,7 +44,8 @@ export default function Home() {
   }
 
   function scoreTTFB(ttfb) {
-    const ttfbs = parseFloat(ttfb.split(" ")[0]); // could be "200 ms" or "1.2 s"
+    const ttfbs = parseFloat(ttfb.split(" ")[3]); // could be "200 ms" or "1.2 s"
+   
     if (ttfbs <= 200) return 1;
     if (ttfbs > 600) return 0;
     return ((600 - ttfbs) / (600 - 200)).toFixed(2);
@@ -65,6 +68,8 @@ export default function Home() {
       }
 
       const result = await response.json();
+      const metrics = getTechnicalPerformanceScore(result);
+      setMetric(metrics)
 
       // Desktop Data
       const desktopdata = {
@@ -187,7 +192,7 @@ export default function Home() {
               {desktopData && mobileData && (
                 <div className="flex justify-center items-center mt-10 space-x-4">
                   <Button onClick={() => setIsDesktopSelected(true)}>
-                    🖥 Desktop
+                    🖥️ Desktop
                   </Button>
                   <Button onClick={() => setIsDesktopSelected(false)}>
                     📱 Mobile
@@ -252,18 +257,80 @@ export default function Home() {
                         <p className="text-gray-600">{displayData.ttfb}</p>
                       </div>
                     </div>
+
                   </div>
 
                   {/* Dashboard with Scores */}
-                  <Dashboard
+                  {/* <Dashboard
                     lcpScore={displayData.lcp}
                     inpScore={displayData.inp}
                     clsScore={displayData.cls}
                     fcpScore={displayData.fcp}
                     ttfbScore={displayData.ttfb}
-                  />
+                  /> */}
 
-                  <Performance />
+                  <Performance
+                  performance={displayData.performance}
+                   FCP={displayData.fcp}
+                   TBT={displayData.tbt}
+                   LCP={displayData.lcp}
+                   CLS={displayData.cls}
+                   SI={displayData.speedindex}
+                   metric={metric}
+                   
+                   />
+
+                   <div className="bg-white shadow-md rounded-xl p-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div className="bg-white shadow-md rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-xl transition">
+                   <p className="text-gray-600">Total Technical Score: {metric.total}</p>
+                      
+                    </div>
+                      <div>
+                        <p className="font-semibold text-gray-700">LCP Score</p>
+                        <p className="text-gray-600">{metric.lcpScore}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-700">CLS Score</p>
+                        <p className="text-gray-600">{metric.clsScore}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-700">INP Score</p>
+                        <p className="text-gray-600">{metric.inpScore}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-700">TTFb Score</p>
+                        <p className="text-gray-600">{metric.ttfbScore}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-700">Compression Score</p>
+                        <p className="text-gray-600">{metric.compressionScore}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-700">Caching Score</p>
+                        <p className="text-gray-600">{metric.cachingScore}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-700">HTTP Score</p>
+                        <p className="text-gray-600">{metric.httpScore}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-700">Site Map Score</p>
+                        <p className="text-gray-600">{metric.sitemapScore}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-700">Robots Score</p>
+                        <p className="text-gray-600">{metric.robotsScore}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-700">Broken Links Score</p>
+                        <p className="text-gray-600">{metric.brokenLinksScore}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-700">Redirect Chain Score</p>
+                        <p className="text-gray-600">{metric.redirectChainsScore}</p>
+                      </div>
+                    </div>
+
                 </div>
               )}
             </div>

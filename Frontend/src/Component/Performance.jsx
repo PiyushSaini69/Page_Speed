@@ -40,9 +40,17 @@ function MetricRow({ label, value, unit, status }) {
   );
 }
 
-export default function Performance() {
+export default function Performance( { performance,
+                   FCP,
+                   TBT,
+                   LCP,
+                   CLS,
+                   SI,
+                  SEO,
+                  accessibility,
+                  bestpractices}) {
   return (
-    <div className="w-full max-w-5xl mx-auto p-6 bg-white rounded-lg shadow">
+    <div className="w-full max-w-5xl mb-8 mx-auto p-6 bg-gray-200  rounded-3xl shadow-2xl">
       {/* Header */}
       <h2 className="text-gray-700 font-semibold text-sm mb-4">
         Diagnose performance issues
@@ -50,10 +58,23 @@ export default function Performance() {
 
       {/* Category Scores */}
       <div className="flex justify-center gap-10 mb-6">
-         <CirculerProgress value={32} size={90} stroke={7} />
-         <CirculerProgress value={76} size={90} stroke={7} />
-         <CirculerProgress value={90} size={90} stroke={7} />
-         <CirculerProgress value={45} size={90} stroke={7} />
+         <div className=" flex flex-col justify-center items-center">
+            <CirculerProgress value={performance} size={90} stroke={7} />
+         <p className="mt-1"> Performance</p>
+         </div>
+        <div className=" flex flex-col justify-center items-center">
+             <CirculerProgress value={accessibility} size={90} stroke={7} />
+             <p className="mt-1">Assessability</p>
+        </div>
+         <div className=" flex flex-col justify-center items-center">
+            <CirculerProgress value={bestpractices} size={90} stroke={7} />
+            <p className="mt-1">Best Practices</p>
+         </div>
+         <div className=" flex flex-col justify-center items-center">
+        <CirculerProgress value={SEO} size={90} stroke={7} />
+        <p className="mt-1">SEO</p>
+         </div>
+         
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -61,7 +82,7 @@ export default function Performance() {
         <div className="flex flex-col items-center gap-6">
           {/* Circular Progress */}
           <div className="flex flex-col items-center">
-            <CirculerProgress value={32} size={160} stroke={14} />
+            <CirculerProgress value={performance} size={160} stroke={14} />
             <p className="mt-2 text-lg font-medium text-gray-700">Performance</p>
             <p className="text-xs text-gray-500 text-center max-w-sm">
               Values are estimated and may vary. 
@@ -74,18 +95,18 @@ export default function Performance() {
         </div>
 
         {/* Right: Website Preview */}
-        <div className="flex justify-center items-start mt-10">
+        <div className="flex justify-center items-start mt-10 border-2 border-black p-2 rounded-3xl">
            <div className="w-full">
             <h3 className="text-xs font-semibold text-gray-600 mb-2">Metrics</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <MetricRow label="First Contentful Paint" value="4.0" unit="s" status="bad" />
-                <MetricRow label="Total Blocking Time" value="1,710" unit="ms" status="bad" />
-                <MetricRow label="Speed Index" value="10.9" unit="s" status="bad" />
+                <MetricRow label="First Contentful Paint" value={FCP}  status="bad" />
+                <MetricRow label="Total Blocking Time" value={TBT}  status="bad" />
+                <MetricRow label="Speed Index" value={SI}  status="bad" />
               </div>
               <div>
-                <MetricRow label="Largest Contentful Paint" value="7.6" unit="s" status="bad" />
-                <MetricRow label="Cumulative Layout Shift" value="0.003" unit="" status="good" />
+                <MetricRow label="Largest Contentful Paint" value={LCP} unit="" status="bad" />
+                <MetricRow label="Cumulative Layout Shift" value={CLS} unit="" status="good" />
               </div>
             </div>
           </div>

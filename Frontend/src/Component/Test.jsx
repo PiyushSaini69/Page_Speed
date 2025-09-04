@@ -10,15 +10,15 @@ export default function Test() {
   const [progress, setProgress] = useState(91);
   return (
     <div className="p-8">
-      <h2 className="text-xl font-semibold mb-4">Progress Bar with Knob</h2>
-      <ProgressBar value={value}  />
+      
+      {/* <ProgressBar value={value}  /> */}
       {/* <Dashboard   />
      */}
      <Performance/>
        
      
       
-      <CirculerProgress value={progress} />
+      {/* <CirculerProgress value={progress} /> */}
     </div>
   );
 }

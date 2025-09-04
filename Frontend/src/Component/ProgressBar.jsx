@@ -38,7 +38,7 @@ export default function ProgressBar({ value = 2.7, max = 6 }) {
         <span
           className={`mb-1 text-xs font-semibold text-white px-1.5 py-0.5 rounded ${knobColor}`}
         >
-          {value}s
+          {value}
         </span>
 
         <div
