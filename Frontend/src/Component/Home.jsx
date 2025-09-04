@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import Button from "./Button";
 import Dashboard from "./DashBoard";
 import Performance from "./Performance";
+import SeoChecker from "./SeoChecker";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -273,6 +274,7 @@ export default function Home() {
                    SI={displayData.speedindex}
                    
                    />
+                  <SeoChecker seourl={url}/> 
                 </div>
               )}
             </div>
