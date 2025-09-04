@@ -35,7 +35,7 @@ export default function Dashboard({lcpScore,inpScore,clsScore,fcpScore,ttfbScore
       <h3 className="text-sm font-semibold text-gray-600 mb-2">Other Notable Metrics</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <MetricCard label="First Contentful Paint (FCP)" value={fcpScore}  max={6} />
-        <MetricCard label="Time to First Byte (TTFB)" value={ttfbScore}  max={6} />
+        <MetricCard label="Time to First Byte (TTFB)" value={parseFloat(ttfbScore.split(" ")[3])} unit="ms"  max={6} />
       </div>
     </div>
    </div>

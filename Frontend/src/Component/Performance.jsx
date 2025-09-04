@@ -45,7 +45,10 @@ export default function Performance( { performance,
                    TBT,
                    LCP,
                    CLS,
-                   SI}) {
+                   SI,
+                  SEO,
+                  accessibility,
+                  bestpractices}) {
   return (
     <div className="w-full max-w-5xl mb-8 mx-auto p-6 bg-gray-200  rounded-3xl shadow-2xl">
       {/* Header */}
@@ -60,15 +63,15 @@ export default function Performance( { performance,
          <p className="mt-1"> Performance</p>
          </div>
         <div className=" flex flex-col justify-center items-center">
-             <CirculerProgress value={76} size={90} stroke={7} />
+             <CirculerProgress value={accessibility} size={90} stroke={7} />
              <p className="mt-1">Assessability</p>
         </div>
          <div className=" flex flex-col justify-center items-center">
-            <CirculerProgress value={90} size={90} stroke={7} />
+            <CirculerProgress value={bestpractices} size={90} stroke={7} />
             <p className="mt-1">Best Practices</p>
          </div>
          <div className=" flex flex-col justify-center items-center">
-        <CirculerProgress value={45} size={90} stroke={7} />
+        <CirculerProgress value={SEO} size={90} stroke={7} />
         <p className="mt-1">SEO</p>
          </div>
          
@@ -102,7 +105,7 @@ export default function Performance( { performance,
                 <MetricRow label="Speed Index" value={SI}  status="bad" />
               </div>
               <div>
-                <MetricRow label="Largest Contentful Paint" value={LCP} unit="s" status="bad" />
+                <MetricRow label="Largest Contentful Paint" value={LCP} unit="" status="bad" />
                 <MetricRow label="Cumulative Layout Shift" value={CLS} unit="" status="good" />
               </div>
             </div>
